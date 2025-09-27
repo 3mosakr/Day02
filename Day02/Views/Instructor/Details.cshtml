@@ -1,0 +1,21 @@
+﻿@model InstructorDetailsViewModel
+@{
+    ViewData["Title"] = "Instructor Details";
+}
+
+<h1>Instructor Details</h1>
+
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="/Images/@Model.img" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">Work in: @Model.Department Department</p>
+        <p class="card-text">Teach: @Model.Course Course</p>
+        <p class="card-text">Salary: @Model.Salary </p>
+    </div>
+</div>
+
+
+<div class="mt-3">
+    <a href="/Instructor" class="btn btn-warning">Back to Instructor List</a>
+</div>

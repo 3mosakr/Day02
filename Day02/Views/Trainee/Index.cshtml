@@ -1,0 +1,55 @@
+﻿@model TraineeCourseViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<div class="container">
+    <div>
+        <select id="traineeSelect" class="form-select" aria-label="Select trainee">
+            <option value="">Select Trainee</option>
+            @foreach (var trainee in Model.Trainees)
+            {
+                <option value="@trainee.Id">@trainee.Name</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <select id="courseSelect" class="form-select" aria-label="Select course">
+            <option value="">Select Course</option>
+            @foreach (var course in Model.Courses)
+            {
+                <option value="@course.Id">@course.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mt-3">
+        <a id="showResultBtn" href="#" class="btn btn-primary disabled">Show Result</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const traineeSelect = document.getElementById("traineeSelect");
+        const courseSelect = document.getElementById("courseSelect");
+        const showResultBtn = document.getElementById("showResultBtn");
+
+        function updateLink() {
+            const traineeId = traineeSelect.value;
+            const courseId = courseSelect.value;
+
+            if (traineeId && courseId) {
+                showResultBtn.href = `/Trainee/result?id=${traineeId}&courseId=${courseId}`;
+                showResultBtn.classList.remove("disabled");
+            } else {
+                showResultBtn.href = "#";
+                showResultBtn.classList.add("disabled");
+            }
+        }
+
+        traineeSelect.addEventListener("change", updateLink);
+        courseSelect.addEventListener("change", updateLink);
+    </script>
+}

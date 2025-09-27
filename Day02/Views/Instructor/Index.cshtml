@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Instructor>
+@{
+    ViewData["Title"] = "Instructors";
+}
+
+<h1>Instructors</h1>
+
+<table class="table table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Salary</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var instructor in Model)
+        {
+            <tr>
+                <td>@instructor.Id</td>
+                <td>@instructor.Name</td>
+                <td>@instructor.Address</td>
+                <td>@instructor.Salary</td>
+                <td><img src="/Images/@instructor.ImageUrl" style="width: 100px" /></td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@instructor.Id" class="btn btn-info btn-sm">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
