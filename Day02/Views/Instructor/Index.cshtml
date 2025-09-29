@@ -5,32 +5,40 @@
 
 <h1>Instructors</h1>
 
-<table class="table table-hover table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Salary</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var instructor in Model)
-        {
-            <tr>
-                <td>@instructor.Id</td>
-                <td>@instructor.Name</td>
-                <td>@instructor.Address</td>
-                <td>@instructor.Salary</td>
-                <td><img src="/Images/@instructor.ImageUrl" style="width: 100px" /></td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@instructor.Id" class="btn btn-info btn-sm">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+<div class="mb-3">
+    <a asp-action="CreateInstructor" class="btn btn-primary">Create New Instructor</a>
+</div>
 
-</table>
+<div class="container">
+    <table class="table table-striped table-hover table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Salary</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var instructor in Model)
+            {
+                <tr>
+                    <td>@instructor.Id</td>
+                    <td>@instructor.Name</td>
+                    <td>@instructor.Address</td>
+                    <td>@instructor.Salary</td>
+                    <td><img src="/Images/@instructor.ImageUrl" style="width: 100px" /></td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@instructor.Id" class="btn btn-info ">Details</a>
+                        <a asp-action="Edit" asp-route-id="@instructor.Id" class="btn btn-success ">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
 
