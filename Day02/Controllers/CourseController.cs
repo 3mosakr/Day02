@@ -34,8 +34,13 @@ namespace Day02.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult saveNew(CreateCourseViewModel createCourseVM)
         {
-            if (createCourseVM.Name is null || createCourseVM.Degree == 0 || createCourseVM.MinDegree == 0 || createCourseVM.DepartmentId == 0)
-                return RedirectToAction("New", createCourseVM);
+            //if (createCourseVM.Name is null || createCourseVM.Degree == 0 || createCourseVM.MinDegree == 0 || createCourseVM.DepartmentId == 0)
+            //    return RedirectToAction("New", createCourseVM);
+            if (!ModelState.IsValid)
+            {
+                createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                return View("New", createCourseVM);
+            }
             // mapping
             var Course = new Course()
             {
@@ -45,10 +50,18 @@ namespace Day02.Controllers
                 Hours = createCourseVM.Hours,
                 DepartmentId = createCourseVM.DepartmentId,
             };
-
-            // add to courses and save changes
-            _context.Courses.Add(Course);
-            _context.SaveChanges();
+            try
+            {
+                // add to courses and save changes
+                _context.Courses.Add(Course);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("ServerError", ex.Message);
+                createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                return View("New", createCourseVM);
+            }
 
             // redirect to index
             return RedirectToAction("index");
@@ -71,7 +84,7 @@ namespace Day02.Controllers
                 DepartmentId = course.DepartmentId,
                 Departments = _context.Departments.AsNoTracking().ToList()
             };
-            
+
             return View("Edit", editCourseViewModel);
         }
 
@@ -80,8 +93,14 @@ namespace Day02.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult saveEdit(CreateCourseViewModel editCourseVM)
         {
-            if (editCourseVM.Name is null || editCourseVM.Degree == 0 || editCourseVM.MinDegree == 0 || editCourseVM.DepartmentId == 0)
-                return RedirectToAction("Edit", editCourseVM);
+            //if (editCourseVM.Name is null || editCourseVM.Degree == 0 || editCourseVM.MinDegree == 0 || editCourseVM.DepartmentId == 0)
+            //    return RedirectToAction("Edit", editCourseVM);
+
+            if (!ModelState.IsValid)
+            {
+                editCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                return View("Edit", editCourseVM);
+            }
             // mapping new data
             var course = new Course()
             {
@@ -98,5 +117,21 @@ namespace Day02.Controllers
             // redirect to index
             return RedirectToAction("index");
         }
+
+        #region Remote validation
+        public IActionResult CheckMinDegree(int MinDegree, int Degree)
+        {
+            if (MinDegree > Degree)
+                return Json(false);
+            return Json(true);
+        }
+
+        public IActionResult CheckHoursDividedBy3(int Hours)
+        {
+            if (Hours % 3 != 0)
+                return Json(false);
+            return Json(true);
+        }
+        #endregion
     }
 }

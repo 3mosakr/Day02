@@ -11,8 +11,8 @@
         public int DepartmentId { get; set; }
         public Department? Department { get; set; }
         
-        public ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
+        public ICollection<Instructor>? Instructors { get; set; } = new List<Instructor>();
 
-        public ICollection<CrsResult> CrsResults { get; set; } = new List<CrsResult>();
+        public ICollection<CrsResult>? CrsResults { get; set; } = new List<CrsResult>();
     }
 }
