@@ -1,0 +1,47 @@
+﻿@model CreateCourseViewModel
+
+@{
+    ViewData["Title"] = "Create New Course";
+
+    SelectList departments = new SelectList(Model.Departments, "Id", "Name");
+}
+
+<h1>Create New Course</h1>
+
+<div class="container">
+    <form asp-action="saveNew" asp-controller="Course" class="form">
+        <div>
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+        <div>
+            <label asp-for="Degree" class="form-label"></label>
+            <input asp-for="Degree" class="form-control" />
+        </div>
+        
+        <div>
+            <label asp-for="MinDegree" class="form-label"></label>
+            <input asp-for="MinDegree" class="form-control" />
+        </div>
+        
+        <div>
+            <label asp-for="Hours" class="form-label"></label>
+            <input asp-for="Hours" class="form-control" />
+        </div>
+
+        <div>
+            <label asp-for="DepartmentId" class="form-label">Department</label>
+            <select asp-for="DepartmentId" class="form-select" asp-items="departments">
+                <option value="">-- Select Department --</option>
+            </select>
+        </div>
+        
+
+        <input type="submit" value="Create" class="btn btn-primary mt-3"/>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-warning mt-3">Back to List</a>
+</div>

@@ -1,0 +1,46 @@
+﻿@model CreateCourseViewModel
+@{
+    ViewData["Title"] = "Edit Course";
+    SelectList departments = new(Model.Departments, "Id", "Name");
+}
+
+<h1>Edit Course</h1>
+
+<div class="container">
+    <form asp-action="saveEdit" asp-controller="Course" class="form">
+        <input type="hidden" asp-for="Id" />
+        <div>
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="Degree" class="form-label"></label>
+            <input asp-for="Degree" class="form-control" />
+        </div>
+
+        <div>
+            <label asp-for="MinDegree" class="form-label"></label>
+            <input asp-for="MinDegree" class="form-control" />
+        </div>
+
+        <div>
+            <label asp-for="Hours" class="form-label"></label>
+            <input asp-for="Hours" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="DepartmentId" class="form-label">Department</label>
+            <select asp-for="DepartmentId" class="form-select" asp-items="departments">
+                <option value="">-- Select Department --</option>
+            </select>
+        </div>
+
+        <div>
+            <input type="submit" value="Save" class="btn btn-success mt-3" />
+        </div>
+
+    </form>
+</div>
+
+<div>
+    <a asp-action="index" asp-controller="course" class="btn btn-warning mt-3">back to list</a>
+</div>

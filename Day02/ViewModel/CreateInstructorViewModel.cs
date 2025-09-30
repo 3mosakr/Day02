@@ -1,5 +1,4 @@
 ﻿
-
 using Day02.Models;
 
 namespace Day02.ViewModel
