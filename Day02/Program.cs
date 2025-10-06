@@ -3,7 +3,9 @@ using Day02.Repository.Interfaces;
 using Day02.Services.Implementation;
 using Day02.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +21,12 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ITraineeRepository, TraineeRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
-
+// Register the image management service
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(
                                                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-
+// Register AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

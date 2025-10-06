@@ -1,4 +1,5 @@
-﻿using Day02.Data;
+﻿using AutoMapper;
+using Day02.Data;
 using Day02.Models;
 using Day02.Repository.Interfaces;
 using Day02.ViewModel.CourseViewModel;
@@ -11,13 +12,18 @@ namespace Day02.Controllers
     {
         private readonly ICourseRepository _courseRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        public CourseController(ICourseRepository courseRepository, IDepartmentRepository departmentRepository)
+        private readonly IMapper _mapper;
+
+        public CourseController(ICourseRepository courseRepository, 
+                                IDepartmentRepository departmentRepository,
+                                IMapper mapper)
         {
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
-        public IActionResult Index(int page = 1, int size = 3)
+        public IActionResult Index(int page = 1, int size = 10)
         {
             //var courses = _context.Courses.Include(c => c.Department).AsNoTracking().ToList();
             //var courses = _courseRepository.GetAllWithIncludeDepartment();
@@ -56,14 +62,17 @@ namespace Day02.Controllers
                 return View("New", createCourseVM);
             }
             // mapping
-            var Course = new Course()
-            {
-                Name = createCourseVM.Name,
-                Degree = createCourseVM.Degree,
-                MinDegree = createCourseVM.MinDegree,
-                Hours = createCourseVM.Hours,
-                DepartmentId = createCourseVM.DepartmentId,
-            };
+            //var Course = new Course()
+            //{
+            //    Name = createCourseVM.Name,
+            //    Degree = createCourseVM.Degree,
+            //    MinDegree = createCourseVM.MinDegree,
+            //    Hours = createCourseVM.Hours,
+            //    DepartmentId = createCourseVM.DepartmentId,
+            //};
+            // Using AutoMapper
+            var Course = _mapper.Map<Course>(createCourseVM);
+
             try
             {
                 // add to courses and save changes
