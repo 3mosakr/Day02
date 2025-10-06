@@ -6,13 +6,18 @@
 <h1>Create New Instructor</h1>
 
 <div class="container">
-    <form asp-action="create" method="post" class="form ">
+    <form asp-action="create" method="post" class="form" enctype="multipart/form-data">
 
         <label class="form-label">Name</label>
         <input type="text" class="form-control" id="Name" name="Name" value="@Model?.Name" required />
 
-        <label class="form-label">Image</label>
-        <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" value="@Model?.ImageUrl" />
+        @* <label class="form-label">Image</label>
+        <input type="text" class="form-control" id="ImageUrl" name="ImageUrl" value="@Model?.ImageUrl" /> 
+        *@
+        <div class="form-group">
+            <label for="ImageUrl">Choose Image:</label>
+            <input type="file" asp-for="ImageUrl" class="form-control" />
+        </div>
 
         <label class="form-label">Salary</label>
         <input type="number" class="form-control" id="Salary" name="Salary" value="@Model?.Salary" required />

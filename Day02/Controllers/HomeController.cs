@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Day02.Filters;
 using Day02.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +19,10 @@ namespace Day02.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [HandelError]
+        public IActionResult Privacy(int x, int y)
         {
+            int z = x / y;
             return View();
         }
 

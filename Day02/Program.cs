@@ -1,4 +1,9 @@
+using Day02.Repository.Implementation;
+using Day02.Repository.Interfaces;
+using Day02.Services.Implementation;
+using Day02.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +13,17 @@ builder.Services.AddControllersWithViews();
 // add connection string
 builder.Services.AddDbContext<Day02.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register the Repository
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ITraineeRepository, TraineeRepository>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(
+                                               Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
 
 var app = builder.Build();
 

@@ -41,7 +41,7 @@
             const courseId = courseSelect.value;
 
             if (traineeId && courseId) {
-                showResultBtn.href = `/Trainee/result?id=${traineeId}&courseId=${courseId}`;
+                showResultBtn.href = `/Trainee/result/${traineeId}/${courseId}`;
                 showResultBtn.classList.remove("disabled");
             } else {
                 showResultBtn.href = "#";

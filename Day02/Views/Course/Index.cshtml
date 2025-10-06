@@ -6,8 +6,17 @@
 
 <h1>Courses</h1>
 
-<div class="mb-3">
-    <a asp-action="New" class="btn btn-primary">Create New Couse</a>
+<div class="mb-3 container d-flex justify-content-between">
+    <div>
+        <a asp-action="New" class="btn btn-primary">Create New Couse</a>
+    </div>
+    <div>
+        <!-- search section -->
+        <form method="get" asp-action="Search" class="form-inline my-2 my-lg-0 d-flex gap-1">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search by Name" aria-label="Search" name="searchString" value="@ViewData["CurrentFilter"]">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
 </div>
 
 <div class="container">

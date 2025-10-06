@@ -29,7 +29,7 @@
                     <td>@instructor.Name</td>
                     <td>@instructor.Address</td>
                     <td>@instructor.Salary</td>
-                    <td><img src="/Images/@instructor.ImageUrl" style="width: 100px" /></td>
+                    <td><img src="@instructor.ImageUrl" style="width: 100px" /></td>
                     <td>
                         <a asp-action="Details" asp-route-id="@instructor.Id" class="btn btn-info ">Details</a>
                         <a asp-action="Edit" asp-route-id="@instructor.Id" class="btn btn-success ">Edit</a>

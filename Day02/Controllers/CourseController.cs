@@ -1,5 +1,6 @@
 ﻿using Day02.Data;
 using Day02.Models;
+using Day02.Repository.Interfaces;
 using Day02.ViewModel.CourseViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,15 +9,18 @@ namespace Day02.Controllers
 {
     public class CourseController : Controller
     {
-        private readonly AppDbContext _context;
-        public CourseController(AppDbContext context)
+        private readonly ICourseRepository _courseRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        public CourseController(ICourseRepository courseRepository, IDepartmentRepository departmentRepository)
         {
-            _context = context;
+            _courseRepository = courseRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public IActionResult Index()
         {
-            var courses = _context.Courses.Include(c => c.Department).AsNoTracking().ToList();
+            //var courses = _context.Courses.Include(c => c.Department).AsNoTracking().ToList();
+            var courses = _courseRepository.GetAllWithIncludeDepartment();
             return View("Index", courses);
         }
 
@@ -25,7 +29,8 @@ namespace Day02.Controllers
             var createCourseViewModel = new CreateCourseViewModel()
             {
                 Name = string.Empty,
-                Departments = _context.Departments.AsNoTracking().ToList()
+                //Departments = _context.Departments.AsNoTracking().ToList()
+                Departments = _departmentRepository.GetAll()
             };
             return View("New", createCourseViewModel);
         }
@@ -38,7 +43,8 @@ namespace Day02.Controllers
             //    return RedirectToAction("New", createCourseVM);
             if (!ModelState.IsValid)
             {
-                createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                //createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                createCourseVM.Departments = _departmentRepository.GetAll();
                 return View("New", createCourseVM);
             }
             // mapping
@@ -53,13 +59,16 @@ namespace Day02.Controllers
             try
             {
                 // add to courses and save changes
-                _context.Courses.Add(Course);
-                _context.SaveChanges();
+                //_context.Courses.Add(Course);
+                _courseRepository.Add(Course);
+                //_context.SaveChanges();
+                _courseRepository.Save();
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("ServerError", ex.Message);
-                createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                //createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                createCourseVM.Departments = _departmentRepository.GetAll();
                 return View("New", createCourseVM);
             }
 
@@ -70,7 +79,8 @@ namespace Day02.Controllers
         public IActionResult Edit(int id)
         {
             // collect data from database
-            var course = _context.Courses.AsNoTracking().FirstOrDefault(c => c.Id == id);
+            //var course = _context.Courses.AsNoTracking().FirstOrDefault(c => c.Id == id);
+            var course = _courseRepository.GetById(id);
             if (course is null)
                 return NotFound();
             // mapping
@@ -82,7 +92,8 @@ namespace Day02.Controllers
                 MinDegree = course.MinDegree,
                 Hours = course.MinDegree,
                 DepartmentId = course.DepartmentId,
-                Departments = _context.Departments.AsNoTracking().ToList()
+                //Departments = _context.Departments.AsNoTracking().ToList()
+                Departments = _departmentRepository.GetAll()
             };
 
             return View("Edit", editCourseViewModel);
@@ -98,7 +109,8 @@ namespace Day02.Controllers
 
             if (!ModelState.IsValid)
             {
-                editCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                //editCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+                editCourseVM.Departments = _departmentRepository.GetAll();
                 return View("Edit", editCourseVM);
             }
             // mapping new data
@@ -112,10 +124,21 @@ namespace Day02.Controllers
                 DepartmentId = editCourseVM.DepartmentId,
             };
             // update to courses and save changes
-            _context.Courses.Update(course);
-            _context.SaveChanges();
+            //_context.Courses.Update(course);
+            _courseRepository.Update(course);
+            //_context.SaveChanges();
+            _courseRepository.Save();
             // redirect to index
             return RedirectToAction("index");
+        }
+
+        public IActionResult Search (string searchString = "")
+        {
+            //var courses = _context.Courses.Include(c => c.Department)
+            //    .Where(c => c.Name.Contains(term)).AsNoTracking().ToList();
+            var courses = _courseRepository.GetAllWithIncludeDepartment()
+                .Where(c => c.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+            return View("Index", courses);
         }
 
         #region Remote validation

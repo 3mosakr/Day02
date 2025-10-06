@@ -1,4 +1,5 @@
 ﻿using Day02.Data;
+using Day02.Repository.Interfaces;
 using Day02.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,28 +8,34 @@ namespace Day02.Controllers
 {
     public class TraineeController : Controller
     {
-        private readonly AppDbContext _context;
-        public TraineeController(AppDbContext context)
+        private readonly ITraineeRepository _traineeRepository;
+        private readonly ICourseRepository _courseRepository;
+        public TraineeController(ITraineeRepository traineeRepository, ICourseRepository courseRepository)
         {
-            _context = context;
+            _traineeRepository = traineeRepository;
+            _courseRepository = courseRepository;
         }
         public IActionResult Index()
         {
             var traineeCourse = new TraineeCourseViewModel();
-            traineeCourse.Courses = _context.Courses.ToList();
-            traineeCourse.Trainees = _context.Trainees.ToList();
+            //traineeCourse.Courses = _context.Courses.ToList();
+            traineeCourse.Courses = _courseRepository.GetAll();
+            //traineeCourse.Trainees = _context.Trainees.ToList();
+            traineeCourse.Trainees = _traineeRepository.GetAll();
 
 
             return View(traineeCourse);
         }
 
+        [Route("Trainee/Result/{id}/{courseId}")]
         public IActionResult Result(int id, int courseId)
         {
             var traineeCourse = new TraineeCourseResultViewModel();
-            var trainee = _context.Trainees
-                                  .Include(t => t.CrsResults)
-                                    .ThenInclude(cr => cr.Course)
-                                  .FirstOrDefault(t => t.Id == id);
+            //var trainee = _context.Trainees
+            //                      .Include(t => t.CrsResults)
+            //                        .ThenInclude(cr => cr.Course)
+            //                      .FirstOrDefault(t => t.Id == id);
+            var trainee = _traineeRepository.GetTraineeWithCourses(id);
             if (trainee is not null)
             {
                 traineeCourse.TraineeName = trainee.Name;
