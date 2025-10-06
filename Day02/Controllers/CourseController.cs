@@ -2,7 +2,9 @@
 using Day02.Data;
 using Day02.Models;
 using Day02.Repository.Interfaces;
+using Day02.Validations;
 using Day02.ViewModel.CourseViewModel;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,14 +15,17 @@ namespace Day02.Controllers
         private readonly ICourseRepository _courseRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
+        public readonly IValidator<CreateCourseViewModel> _createCourseValidator;
 
-        public CourseController(ICourseRepository courseRepository, 
+        public CourseController(ICourseRepository courseRepository,
                                 IDepartmentRepository departmentRepository,
-                                IMapper mapper)
+                                IMapper mapper,
+                                IValidator<CreateCourseViewModel> createCourseValidator)
         {
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
             _mapper = mapper;
+            _createCourseValidator = createCourseValidator;
         }
 
         public IActionResult Index(int page = 1, int size = 10)
@@ -55,8 +60,16 @@ namespace Day02.Controllers
         {
             //if (createCourseVM.Name is null || createCourseVM.Degree == 0 || createCourseVM.MinDegree == 0 || createCourseVM.DepartmentId == 0)
             //    return RedirectToAction("New", createCourseVM);
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
+            //{
+            //    //createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
+            //    createCourseVM.Departments = _departmentRepository.GetAll();
+            //    return View("New", createCourseVM);
+            //}
+            var validationResult = _createCourseValidator.Validate(createCourseVM);
+            if (!validationResult.IsValid)
             {
+                validationResult.AddToModelState(this.ModelState);
                 //createCourseVM.Departments = _context.Departments.AsNoTracking().ToList();
                 createCourseVM.Departments = _departmentRepository.GetAll();
                 return View("New", createCourseVM);

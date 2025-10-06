@@ -2,9 +2,12 @@ using Day02.Repository.Implementation;
 using Day02.Repository.Interfaces;
 using Day02.Services.Implementation;
 using Day02.Services.Interfaces;
+using Day02.Validations;
+using Day02.ViewModel.CourseViewModel;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using System;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +30,9 @@ builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(
                                                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 // Register AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// Register FluentValidation
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<IValidator<CreateCourseViewModel>, CreateCourseValidator>();
 
 var app = builder.Build();
 

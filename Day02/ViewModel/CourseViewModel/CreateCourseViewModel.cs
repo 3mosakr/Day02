@@ -8,11 +8,11 @@ namespace Day02.ViewModel.CourseViewModel
     public class CreateCourseViewModel 
     {
         public int Id { get; set; }
-        [Required]
-        [MinLength(2)]
-        [UniquePerDepartment]
+        //[Required]
+        //[MinLength(2)]
+        //[UniquePerDepartment]
         public required string Name { get; set; }
-        [Range(50, 100)]
+        //[Range(50, 100)]
         public int Degree { get; set; }
         [Remote(action: "CheckMinDegree", controller: "Course", AdditionalFields = "Degree", ErrorMessage ="Min Degree must be less than Degree")]
         public int MinDegree { get; set; }
