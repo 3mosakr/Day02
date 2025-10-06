@@ -29,6 +29,11 @@ namespace Day02.Repository.Implementation
             return _context.Courses.ToList();
         }
 
+        public List<Course> GetAllPagination(int page, int size)
+        {
+            return _context.Courses.Skip((page - 1) * size).Take(size).ToList();
+        }
+
         public List<Course> GetAllWithIncludeDepartment()
         {
             return _context.Courses.Include(c => c.Department).ToList();

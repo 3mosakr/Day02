@@ -17,11 +17,19 @@ namespace Day02.Controllers
             _departmentRepository = departmentRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int size = 3)
         {
             //var courses = _context.Courses.Include(c => c.Department).AsNoTracking().ToList();
-            var courses = _courseRepository.GetAllWithIncludeDepartment();
-            return View("Index", courses);
+            //var courses = _courseRepository.GetAllWithIncludeDepartment();
+            var courses = _courseRepository.GetAllPagination(page, size);
+            PaginatCourseViewModel paginatCourseVM = new PaginatCourseViewModel()
+            {
+                CurrentPage = page,
+                PageSize = size,
+                TotalCount = _courseRepository.GetAll().Count,
+                Courses = courses
+            };
+            return View("Index", paginatCourseVM);
         }
 
         public IActionResult New()
